@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fire X</title>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+</head>
+<body>
+    
+<section class="hero is-medium is-dark is-bold hero-body">
+    <div class="has-text-centered">
+        <img src="./static/fire.png" width="100" height="200"><br>
+        <strong class="has-text-centered title">Fire X</strong>
+        </div>
+
+</section>
+
+<div class="has-text-centered">
+    <br>
+        <form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+
+            <div class="file level-item has-text-centered">
+                    <label class="file-label">
+                      <input id="file-picker" class="file-input" type="file" name="file" accept="image/*" multiple>
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Select File ...
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+<br>
+    <input type="submit" value="Upload" id="upload-button" class="button is-danger is-rounded">
+</form>
+ 
+<a href="https://firms.modaps.eosdis.nasa.gov/map/">
+<img style="-webkit-user-select: none;cursor: zoom-in;" src="https://firms.modaps.eosdis.nasa.gov/wms/?REQUEST=GetMap&amp;layers=fires_modis_24&amp;WIDTH=1024&amp;HEIGHT=512&amp;BBOX=-180,-90,180,90&amp;MAP_KEY=894aa8b09a9e852dd5c05b311e63237c" width="724" height="362">
+</a>
+</div>
+<p class="box has-text-centered">
+
+        <button class="button is-danger is-rounded" onclick="getLocation()">Send Coordinates</button>
+
+</p>
+
+<footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Fire X</strong> by <a href="https://en.wikipedia.org/wiki/Stroopwafel">Stroopwafel</a>
+          </p>
+        </div>
+      </footer>
+</body>
+
+<script>
+
+    $("#file-picker").change(function(){
+
+        var input = document.getElementById('file-picker');
+
+        for (var i=0; i<input.files.length; i++)
+        {
+        //koala.jpg, koala.JPG substring(index) lastIndexOf('a') koala.1.jpg
+            var ext= input.files[i].name.substring(input.files[i].name.lastIndexOf('.')+1).toLowerCase()
+
+            if ((ext == 'jpg') || (ext == 'png'))
+            {
+                $("#msg").text("Files are supported")
+            }
+            else
+            {
+                $("#msg").text("Files are NOT supported")
+                document.getElementById("file-picker").value ="";
+            }
+
+        }
+
+
+    } );
+
+</script>
+
+<script>
+
+
+</script>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+<script>
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyDZJ93nfyToffqWSMugWh1efky64k7VRJE",
+          authDomain: "nasa-app-stroopwafel.firebaseapp.com",
+          databaseURL: "https://nasa-app-stroopwafel.firebaseio.com",
+          projectId: "nasa-app-stroopwafel",
+          storageBucket: "nasa-app-stroopwafel.appspot.com",
+          messagingSenderId: "428262989969"
+        };
+        firebase.initializeApp(config);
+
+
+        var database = firebase.database();
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position) {
+
+    writeUserData(position.coords.latitude,position.coords.longitude);
+
+}
+
+function writeUserData(lat, long) {
+  firebase.database().ref('coordinate').set({
+    latitude: lat,
+    longitude: long
+  });
+
+  window.location.href = "https://nasa.ngrok.io/test";
+}
+</script>
+</html>

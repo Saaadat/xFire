@@ -1,0 +1,145 @@
+<html>
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fire X</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+   crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+ integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+ crossorigin=""></script>
+</head>
+
+<body>
+
+        <section class="hero is-medium is-dark is-bold hero-body">
+                <div class="has-text-centered">
+                    <img src="./static/fire.png" width="100" height="200"><br>
+                    <strong class="has-text-centered title">Fire X</strong>
+                    </div>
+            
+            </section>
+
+            <div class="container level">
+<div class="tile is-ancestor level-item">
+<div class="tile is-4 is-vertical is-parent">
+    <br>
+    <div class="is-primary is-child tile box ">
+<p class="is-size-4" id="fireHeading1"></p>
+</div>
+<div class="is-primary is-child tile box">
+<p class="is-size-4" id="fireHeading2"></p>
+</div>
+</div>
+<div class="tile is-4 is-vertical is-parent">
+        <br>
+<div class="is-primary is-child tile box">
+<p class="is-size-4" id="fireHeading3"></p>
+</div>
+<div class="is-primary is-child tile box">
+<p class="is-size-4" id="fireHeading4"></p>
+</div>
+<br>
+</div>
+</div>
+</div>
+
+<div id="mapid" style="height: 280px;"></div>
+
+<footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Fire X</strong> by <a href="https://en.wikipedia.org/wiki/Stroopwafel">Stroopwafel</a>
+          </p>
+        </div>
+      </footer>
+
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var lat1 = 3.1576092;
+  var lon1 = 101.7106762;
+  var config = {
+    apiKey: "AIzaSyDZJ93nfyToffqWSMugWh1efky64k7VRJE",
+    authDomain: "nasa-app-stroopwafel.firebaseapp.com",
+    databaseURL: "https://nasa-app-stroopwafel.firebaseio.com",
+    projectId: "nasa-app-stroopwafel",
+    storageBucket: "nasa-app-stroopwafel.appspot.com",
+    messagingSenderId: "428262989969"
+  };
+  firebase.initializeApp(config);
+
+  var fireHeading = document.getElementById("fireHeading");
+
+
+var ref1 = firebase.database().ref("dlat");
+var ref2 = firebase.database().ref("dlon");
+var ref3 = firebase.database().ref("intensity-output");
+var ref4 = firebase.database().ref("prediction");
+
+ref1.once("value", function(snapshot){
+// Contains all data from Firebase
+var data = snapshot.val();
+// Has customer name
+
+// Append data to view
+fireHeading1.innerText = "Precited Delta Latitude: " + parseFloat(data).toFixed(5);
+lat1 = data;
+
+});
+
+ref2.once("value", function(snapshot){
+// Contains all data from Firebase
+var data = snapshot.val();
+// Has customer name
+
+// Append data to view
+fireHeading2.innerText = "Predected Delta Longitude: " + parseFloat(data).toFixed(5);
+lon1 = data;
+});
+
+ref3.once("value", function(snapshot){
+// Contains all data from Firebase
+var data = snapshot.val();
+// Has customer name
+
+// Append data to view
+fireHeading3.innerText = "Predicted Fire Intensity: " + parseFloat(data).toFixed(2) + " Kelvin";
+
+});
+
+ref4.once("value", function(snapshot){
+// Contains all data from Firebase
+var data = snapshot.val();
+// Has customer name
+
+// Append data to view
+fireHeading4.innerText = "Risk Prediction: " + parseFloat(data).toFixed(2) + " %";
+
+});
+
+var mymap = L.map('mapid').setView([lat1, lon1], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: 'Brought to you my Stroopwafel',
+      maxZoom: 17,
+      minZoom: 9
+    }).addTo(mymap);
+
+
+var circle = L.circle([lat1, lon1], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 500
+}).addTo(mymap);
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fire X</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+</head>
+<body>
+        <section class="hero is-medium is-dark is-bold hero-body">
+                <div class="has-text-centered">
+                    <img src="./static/fire.png" width="100" height="200"><br>
+                    <strong class="has-text-centered title">Fire X</strong>
+                    </div>
+            
+            </section>
+            <div class="has-text-centered">
+<br>
+            
+Thank you for helping the environment!
+<br>
+<p id="fireHeading1"></p>
+<br>
+<button class="button is-danger is-rounded" onclick="home()">Go Back</button>
+<br>
+</div>
+
+<footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Fire X</strong> by <a href="https://en.wikipedia.org/wiki/Stroopwafel">Stroopwafel</a>
+          </p>
+        </div>
+      </footer>
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+      <script>
+              // Initialize Firebase
+              var config = {
+                apiKey: "AIzaSyDZJ93nfyToffqWSMugWh1efky64k7VRJE",
+                authDomain: "nasa-app-stroopwafel.firebaseapp.com",
+                databaseURL: "https://nasa-app-stroopwafel.firebaseio.com",
+                projectId: "nasa-app-stroopwafel",
+                storageBucket: "nasa-app-stroopwafel.appspot.com",
+                messagingSenderId: "428262989969"
+              };
+              firebase.initializeApp(config);
+      
+              var fireHeading = document.getElementById("fireHeading");
+
+              var database = firebase.database();
+      
+              var ref1 = firebase.database().ref("image-counter/key"); 
+
+ref1.once("value", function(snapshot){
+// Contains all data from Firebase
+var data = snapshot.val();
+data = parseInt(data) + 1;
+// Has customer name
+
+firebase.database().ref('image-counter').set({
+    key: data
+})
+
+// Append data to view
+fireHeading1.innerText = "Image Counter " + data;
+
+});
+
+function home(){
+    window.location.href = "https://nasa.ngrok.io/";
+}
+
+      </script>
+      
+</body>
+</html>
